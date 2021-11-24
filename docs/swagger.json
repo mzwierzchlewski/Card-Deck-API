@@ -1,0 +1,247 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This a card deck api server.\nMade for Toggl.",
+        "title": "Card Deck API",
+        "contact": {
+            "name": "Maciej Zwierzchlewski",
+            "url": "https:///maciejz.dev",
+            "email": "zwierzchlewski.maciej@outlook.com"
+        },
+        "version": "0.1"
+    },
+    "host": "localhost:13370",
+    "basePath": "/",
+    "paths": {
+        "/decks": {
+            "post": {
+                "description": "Creates a new deck.\nIf no cards are specified, a full deck is created.\nIf cards are to be in random order set the shuffled param.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "Creates a new Deck",
+                "operationId": "create-deck",
+                "parameters": [
+                    {
+                        "description": "New deck options",
+                        "name": "deckOptions",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.postDeckRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.postDeckResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.apiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/decks/{id}": {
+            "get": {
+                "description": "Displays deck and its cards by ID.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "Opens a Deck",
+                "operationId": "get-deck-by-id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deck ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Deck"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.apiError"
+                        }
+                    }
+                }
+            }
+        },
+        "/decks/{id}/{numberOfCards}": {
+            "patch": {
+                "description": "Draws cards from the top of the deck.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "deck"
+                ],
+                "summary": "Draws cards from a deck",
+                "operationId": "draw-cards",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Deck ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of cards to draw",
+                        "name": "numberOfCards",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.drawCardsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/deckcontroller.apiError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "deckcontroller.apiError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Deck with id e89efc4d-9294-443a-8a54-d78cd0e8a0c9 does not exist."
+                }
+            }
+        },
+        "deckcontroller.drawCardsResponse": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Card"
+                    }
+                }
+            }
+        },
+        "deckcontroller.postDeckRequest": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "AS",
+                        "KD",
+                        "AC",
+                        "2C",
+                        "KH"
+                    ]
+                },
+                "shuffled": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "deckcontroller.postDeckResponse": {
+            "type": "object",
+            "properties": {
+                "deck_id": {
+                    "type": "string",
+                    "example": "e89efc4d-9294-443a-8a54-d78cd0e8a0c9"
+                },
+                "invalid_cards": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "0H",
+                        "2P"
+                    ]
+                },
+                "remaining": {
+                    "type": "integer",
+                    "example": 52
+                },
+                "shuffled": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        },
+        "models.Card": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "string",
+                    "example": "AH"
+                },
+                "suit": {
+                    "type": "string",
+                    "example": "Hearts"
+                },
+                "value": {
+                    "type": "string",
+                    "example": "Ace"
+                }
+            }
+        },
+        "models.Deck": {
+            "type": "object",
+            "properties": {
+                "cards": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Card"
+                    }
+                },
+                "deck_id": {
+                    "type": "string",
+                    "example": "e89efc4d-9294-443a-8a54-d78cd0e8a0c9"
+                },
+                "remaining": {
+                    "type": "integer",
+                    "example": 52
+                },
+                "shuffled": {
+                    "type": "boolean",
+                    "example": false
+                }
+            }
+        }
+    }
+}

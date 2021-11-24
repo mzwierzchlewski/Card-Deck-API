@@ -1,0 +1,173 @@
+basePath: /
+definitions:
+  deckcontroller.apiError:
+    properties:
+      error:
+        example: Deck with id e89efc4d-9294-443a-8a54-d78cd0e8a0c9 does not exist.
+        type: string
+    type: object
+  deckcontroller.drawCardsResponse:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/models.Card'
+        type: array
+    type: object
+  deckcontroller.postDeckRequest:
+    properties:
+      cards:
+        example:
+        - AS
+        - KD
+        - AC
+        - 2C
+        - KH
+        items:
+          type: string
+        type: array
+      shuffled:
+        example: false
+        type: boolean
+    type: object
+  deckcontroller.postDeckResponse:
+    properties:
+      deck_id:
+        example: e89efc4d-9294-443a-8a54-d78cd0e8a0c9
+        type: string
+      invalid_cards:
+        example:
+        - 0H
+        - 2P
+        items:
+          type: string
+        type: array
+      remaining:
+        example: 52
+        type: integer
+      shuffled:
+        example: false
+        type: boolean
+    type: object
+  models.Card:
+    properties:
+      code:
+        example: AH
+        type: string
+      suit:
+        example: Hearts
+        type: string
+      value:
+        example: Ace
+        type: string
+    type: object
+  models.Deck:
+    properties:
+      cards:
+        items:
+          $ref: '#/definitions/models.Card'
+        type: array
+      deck_id:
+        example: e89efc4d-9294-443a-8a54-d78cd0e8a0c9
+        type: string
+      remaining:
+        example: 52
+        type: integer
+      shuffled:
+        example: false
+        type: boolean
+    type: object
+host: localhost:13370
+info:
+  contact:
+    email: zwierzchlewski.maciej@outlook.com
+    name: Maciej Zwierzchlewski
+    url: https:///maciejz.dev
+  description: |-
+    This a card deck api server.
+    Made for Toggl.
+  title: Card Deck API
+  version: "0.1"
+paths:
+  /decks:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        Creates a new deck.
+        If no cards are specified, a full deck is created.
+        If cards are to be in random order set the shuffled param.
+      operationId: create-deck
+      parameters:
+      - description: New deck options
+        in: body
+        name: deckOptions
+        schema:
+          $ref: '#/definitions/deckcontroller.postDeckRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/deckcontroller.postDeckResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/deckcontroller.apiError'
+      summary: Creates a new Deck
+      tags:
+      - deck
+  /decks/{id}:
+    get:
+      description: Displays deck and its cards by ID.
+      operationId: get-deck-by-id
+      parameters:
+      - description: Deck ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Deck'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/deckcontroller.apiError'
+      summary: Opens a Deck
+      tags:
+      - deck
+  /decks/{id}/{numberOfCards}:
+    patch:
+      description: Draws cards from the top of the deck.
+      operationId: draw-cards
+      parameters:
+      - description: Deck ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Number of cards to draw
+        in: path
+        name: numberOfCards
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/deckcontroller.drawCardsResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/deckcontroller.apiError'
+      summary: Draws cards from a deck
+      tags:
+      - deck
+swagger: "2.0"
