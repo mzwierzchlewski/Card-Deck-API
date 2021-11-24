@@ -7,25 +7,25 @@ import (
 	"card-deck-api/models"
 )
 
-func TestGet_ExistingDeck(t *testing.T) {
+func TestGet_CorrectDeckId_ReturnsExistingDeck(t *testing.T) {
 	// Arrange
-	deck := models.Deck{ID: "TestGet_ExistingDeck", Shuffled: true}
+	deck := models.Deck{ID: "TestGet_CorrectDeckId_ReturnsExistingDeck", Shuffled: true}
 	deckstore.Set(deck)
 
 	// Act
-	resultDeck, err := Get("TestGet_ExistingDeck")
+	resultDeck, err := Get("TestGet_CorrectDeckId_ReturnsExistingDeck")
 
 	// Assert
-	if resultDeck.ID != "TestGet_ExistingDeck" || resultDeck.Shuffled != true || err != nil {
-		t.Errorf("Got wrong response, expected deck with id = TestGet_ExistingDeck, shuffled = true and nil error, got: %#v and %v", resultDeck, err)
+	if resultDeck.ID != "TestGet_CorrectDeckId_ReturnsExistingDeck" || resultDeck.Shuffled != true || err != nil {
+		t.Errorf("Got wrong response, expected deck with id = TestGet_CorrectDeckId_ReturnsExistingDeck, shuffled = true and nil error, got: %#v and %v", resultDeck, err)
 	}
 }
 
-func TestGet_NotExistingDeck(t *testing.T) {
+func TestGet_IncorrectDeckId_ReturnsError(t *testing.T) {
 	// Arrange
 
 	// Act
-	resultDeck, err := Get("4")
+	resultDeck, err := Get("TestGet_IncorrectDeckId_ReturnsError")
 
 	// Assert
 	if resultDeck != nil || err == nil {
@@ -33,7 +33,7 @@ func TestGet_NotExistingDeck(t *testing.T) {
 	}
 }
 
-func TestDraw(t *testing.T) {
+func TestDraw_CalledForExistingDeckAndEnoughCards_ReturnsTopCards(t *testing.T) {
 	// Arrange
 	cards := []models.Card{
 		{"King", "Hearts", "KH"},
@@ -43,11 +43,11 @@ func TestDraw(t *testing.T) {
 		{"3", "Clubs", "3C"},
 		{"Ace", "Diamonds", "AD"},
 	}
-	deck := models.Deck{ID: "TestDraw", Shuffled: true, Cards: cards, Remaining: len(cards)}
+	deck := models.Deck{ID: "TestDraw_CalledForExistingDeckAndEnoughCards_ReturnsTopCards", Shuffled: true, Cards: cards, Remaining: len(cards)}
 	deckstore.Set(deck)
 
 	// Act
-	drawnCards, err := Draw("TestDraw", 3)
+	drawnCards, err := Draw("TestDraw_CalledForExistingDeckAndEnoughCards_ReturnsTopCards", 3)
 
 	//
 	if len(drawnCards) != 3 || err != nil || drawnCards[0].Code != "KH" || drawnCards[1].Code != "AH" || drawnCards[2].Code != "2C" {
@@ -55,17 +55,17 @@ func TestDraw(t *testing.T) {
 	}
 }
 
-func TestDraw_RequestMoreCardsThanExist(t *testing.T) {
+func TestDraw_CalledForExistingDeckAndNotEnoughCards_ReturnsAllCards(t *testing.T) {
 	// Arrange
 	cards := []models.Card{
 		{"King", "Hearts", "KH"},
 		{"Ace", "Hearts", "AH"},
 	}
-	deck := models.Deck{ID: "TestDraw_RequestMoreCardsThanExist", Shuffled: true, Cards: cards, Remaining: len(cards)}
+	deck := models.Deck{ID: "TestDraw_CalledForExistingDeckAndNotEnoughCards_ReturnsAllCards", Shuffled: true, Cards: cards, Remaining: len(cards)}
 	deckstore.Set(deck)
 
 	// Act
-	drawnCards, err := Draw("TestDraw_RequestMoreCardsThanExist", 3)
+	drawnCards, err := Draw("TestDraw_CalledForExistingDeckAndNotEnoughCards_ReturnsAllCards", 3)
 
 	//
 	if len(drawnCards) != 2 || err != nil || drawnCards[0].Code != "KH" || drawnCards[1].Code != "AH" {
@@ -73,11 +73,11 @@ func TestDraw_RequestMoreCardsThanExist(t *testing.T) {
 	}
 }
 
-func TestDraw_ReturnsNilAndErrForWrongDeckId(t *testing.T) {
+func TestDraw_CalledForNonExistingDeck_ReturnsError(t *testing.T) {
 	// Arrange
 
 	// Act
-	drawnCards, err := Draw("TestDraw_ReturnsNilAndErrForWrongDeckId", 3)
+	drawnCards, err := Draw("TestDraw_CalledForNonExistingDeck_ReturnsError", 3)
 
 	// Assert
 	if drawnCards != nil || err == nil {
@@ -85,7 +85,7 @@ func TestDraw_ReturnsNilAndErrForWrongDeckId(t *testing.T) {
 	}
 }
 
-func TestCreate_WithCardsList(t *testing.T) {
+func TestCreate_WithCardsListNotShuffled_ReturnsDeckWithCardsInSameOrder(t *testing.T) {
 	// Arrange
 	cardsList := []string{"AH", "2C"}
 
@@ -98,7 +98,7 @@ func TestCreate_WithCardsList(t *testing.T) {
 	}
 }
 
-func TestCreate_FiltersOutInvalidCodes(t *testing.T) {
+func TestCreate_WithCardsListWithInvalidCodes_ReturnsDeckWithCardsAndInvalidCodes(t *testing.T) {
 	// Arrange
 	cardsList := []string{"AH", "TEST"}
 
@@ -123,7 +123,7 @@ func TestCreate_WithoutCardsList_CreatesWholeDeck(t *testing.T) {
 	}
 }
 
-func TestCreate_ReturnsWholeDeckInOrder(t *testing.T) {
+func TestCreate_WithoutCardsListNotShuffled_ReturnsWholeDeckInOrder(t *testing.T) {
 	// Arrange
 	correctOrder := []string{"AC", "2C", "3C", "4C", "5C", "6C", "7C", "8C", "9C", "10C", "JC", "QC", "KC",
 		"AD", "2D", "3D", "4D", "5D", "6D", "7D", "8D", "9D", "10D", "JD", "QD", "KD",

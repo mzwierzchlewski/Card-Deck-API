@@ -36,7 +36,7 @@ func TestNewCard(t *testing.T) {
 	}
 }
 
-func TestGetPossibleCardCodes_ReturnsFullDeck(t *testing.T) {
+func TestGetPossibleCardCodes_WhenCalled_ReturnsFullDeck(t *testing.T) {
 	// Arrange
 
 	// Act

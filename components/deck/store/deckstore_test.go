@@ -42,7 +42,7 @@ func TestGet(t *testing.T) {
 	}
 }
 
-func TestSet_SetDeckInCorrectPlace(t *testing.T) {
+func TestSet_WithNewDeck_SetsDeckInCorrectPlace(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	id := "12345"
@@ -60,7 +60,7 @@ func TestSet_SetDeckInCorrectPlace(t *testing.T) {
 	teardown(t)
 }
 
-func TestSet_DeepCopiesDeck(t *testing.T) {
+func TestSet_WithNewDeck_DeepCopiesTheDeck(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	id, code1, code2 := "12345", "AK", "Foo"
@@ -80,7 +80,7 @@ func TestSet_DeepCopiesDeck(t *testing.T) {
 	teardown(t)
 }
 
-func TestSet_ReplacesExistingDeck(t *testing.T) {
+func TestSet_WithExistingDeck_ReplacesExistingDeck(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	id, code := "1", "AK"
@@ -99,7 +99,7 @@ func TestSet_ReplacesExistingDeck(t *testing.T) {
 	teardown(t)
 }
 
-func TestModify_ReturnsNilsWhenDeckDoesntExist(t *testing.T) {
+func TestModify_WithNonExistingDeck_ReturnsNils(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	action := func(deck *models.Deck) {
@@ -116,7 +116,7 @@ func TestModify_ReturnsNilsWhenDeckDoesntExist(t *testing.T) {
 	teardown(t)
 }
 
-func TestModify(t *testing.T) {
+func TestModify_WithExistingDeck_SetsDeckProperty(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	action := func(deck *models.Deck) {
@@ -134,7 +134,7 @@ func TestModify(t *testing.T) {
 	teardown(t)
 }
 
-func TestModify_RemainingGetsSetToCorrectValue(t *testing.T) {
+func TestModify_WhenChangingDecksCards_SetsRemainingPropertyToCorrectValue(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	action := func(deck *models.Deck) {
@@ -153,7 +153,7 @@ func TestModify_RemainingGetsSetToCorrectValue(t *testing.T) {
 	teardown(t)
 }
 
-func TestModify_DeepCopiesDeckBeforeSaving(t *testing.T) {
+func TestModify_BeforeSavingDeck_DeepCopiesDeck(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	code1, code2 := "AK", "Foo"
@@ -174,7 +174,7 @@ func TestModify_DeepCopiesDeckBeforeSaving(t *testing.T) {
 	teardown(t)
 }
 
-func TestModify_PanicsWhenDeckIdIsChanged(t *testing.T) {
+func TestModify_WhenDeckIdIsChanged_Panics(t *testing.T) {
 	// Arrange
 	teardown := setup(t)
 	action := func(deck *models.Deck) {
