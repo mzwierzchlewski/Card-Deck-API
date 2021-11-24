@@ -1,9 +1,10 @@
 package main
 
 import (
-	"card-deck-api/api"
 	"flag"
 	"fmt"
+
+	"card-deck-api/api"
 )
 
 func main() {
