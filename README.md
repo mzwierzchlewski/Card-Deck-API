@@ -5,7 +5,7 @@ Built with Go 1.17.3
 1. Open the main project directory in a terminal
 2. Run `go run ./main.go`
 3. The project should start running at `localhost:13370` (or `127.0.0.1:13370`)
-4. Swagger is available at `localhost:13370/swagger/index.htm`
+4. Swagger is available at `localhost:13370/swagger/index.html`
 
 ## Running tests
 1. Open the main project directory in a terminal
