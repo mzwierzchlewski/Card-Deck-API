@@ -53,8 +53,8 @@ var ranks = map[string]int{
 }
 
 var suits = map[string]int{
-	"Clubs":    0,
+	"Clubs":    2,
 	"Diamonds": 1,
-	"Hearts":   2,
-	"Spades":   3,
+	"Hearts":   3,
+	"Spades":   0,
 }

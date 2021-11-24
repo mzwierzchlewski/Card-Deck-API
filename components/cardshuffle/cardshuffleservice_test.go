@@ -16,7 +16,7 @@ func TestOrderCards(t *testing.T) {
 		{"3", "Clubs", "3C"},
 		{"Ace", "Diamonds", "AD"},
 	}
-	correctOrder := []string{"2C", "3C", "AD", "AH", "KH", "3S"}
+	correctOrder := []string{"3S", "AD", "2C", "3C", "AH", "KH"}
 
 	// Act
 	orderedCards := OrderCards(cards)
@@ -41,10 +41,10 @@ func TestShuffleCards(t *testing.T) {
 	}
 
 	// Act
-	orderedCards := ShuffleCards(cards)
+	shuffledCards := ShuffleCards(cards)
 
 	// Assert
-	for i, card := range orderedCards {
+	for i, card := range shuffledCards {
 		if card.Code != cards[i].Code {
 			t.Errorf("Wrong order, not expected %s at position %d", card.Code, i)
 		}
